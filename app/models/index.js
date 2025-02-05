@@ -21,6 +21,7 @@ db.user = require("./user.model.js")(sequelize, Sequelize);
 db.session = require("./session.model.js")(sequelize, Sequelize);
 db.event = require("./event.model.js")(sequelize, Sequelize);
 db.experience = require("./experience.model.js")(sequelize, Sequelize);
+db.award = require("./award.model.js")(sequelize, Sequelize);
 
 //!!!!!!!ALL THESE ARE COMMENTED SECTIONS FOR REFERENCE FOR BRIDGE TABLES!!!!!!!!1
 
