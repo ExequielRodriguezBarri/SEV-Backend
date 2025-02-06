@@ -23,7 +23,7 @@ db.event = require("./event.model.js")(sequelize, Sequelize);
 db.experience = require("./experience.model.js")(sequelize, Sequelize);
 db.award = require("./award.model.js")(sequelize, Sequelize);
 db.student = require("./student.model.js")(sequelize, Sequelize);
-
+db.badge = require("./badge.model.js")(sequelize, Sequelize);
 //!!!!!!!ALL THESE ARE COMMENTED SECTIONS FOR REFERENCE FOR BRIDGE TABLES!!!!!!!!1
 
 // 1. User and Resume (One-to-Many)
