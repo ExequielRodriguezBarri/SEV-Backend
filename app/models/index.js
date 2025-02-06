@@ -23,6 +23,8 @@ db.event = require("./event.model.js")(sequelize, Sequelize);
 db.experience = require("./experience.model.js")(sequelize, Sequelize);
 db.award = require("./award.model.js")(sequelize, Sequelize);
 db.student = require("./student.model.js")(sequelize, Sequelize);
+db.flightplan = require("./flightplan.model.js")(sequelize, Sequelize);
+
 db.task = require("./task.model.js")(sequelize, Sequelize);
 //!!!!!!!ALL THESE ARE COMMENTED SECTIONS FOR REFERENCE FOR BRIDGE TABLES!!!!!!!!1
 
