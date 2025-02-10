@@ -1,8 +1,19 @@
 module.exports = (sequelize, Sequelize) => {
     const Experience = sequelize.define("experience", {
+      required_experience: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
+      semesters_from_graduation: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 8
+      },
       category: {
         type: Sequelize.STRING,
         allowNull: false
+
       },
       type: {
         type: Sequelize.STRING,

@@ -25,6 +25,8 @@ exports.create = (req, res) => {
         description: req.body.description,
         rationale: req.body.rationale,
         points: req.body.points,
+        required_task: req.body.required_task,
+        semesters_from_graduation: req.body.semesters_from_graduation,
 
         
     };

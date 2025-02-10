@@ -1,6 +1,10 @@
 module.exports = (sequelize, Sequelize) => {
     const Student = sequelize.define("student", {
-        name: {
+        fName: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
+        lName: {
             type: Sequelize.STRING,
             allowNull: false
         },
@@ -8,20 +12,24 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false
         },
+
         phone: {
             type: Sequelize.STRING,
             allowNull: false
         },
-        graduation_date: {
-            type: Sequelize.DATE,
-            allowNull: false
+        semesters_from_graduation: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            defaultValue: 8,
         },
+
+
         points_awarded: {
             type: Sequelize.INTEGER,
             allowNull: false,
             defaultValue: 0
         }
     });
-  
+
     return Student;
 };
