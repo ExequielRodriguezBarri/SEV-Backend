@@ -1,134 +1,158 @@
 const db = require("../models");
-const Admin = db.admin;
+const Role = db.role;
 const Op = db.Sequelize.Op;
 
-// Create and Save a new Admin
+
+// Create and Save a new Role
 exports.create = (req, res) => {
     // Validate request
-    if (!req.body.name || !req.body.email) {
+    if (!req.body.description) {
+
         res.status(400).send({
             message: "Content can not be empty!"
         });
         return;
     }
 
-    // Create an Admin
-    const admin = {
-        name: req.body.name,
-        email: req.body.email
+    // Create an Role
+    const role = {
+        description: req.body.description
     };
 
-    // Save Admin in the database
-    Admin.create(admin)
+
+    // Save Role in the database
+    Role.create(role)
         .then(data => {
             res.send(data);
         })
+
         .catch(err => {
             res.status(500).send({
-                message: err.message || "Some error occurred while creating the Admin."
+                message: err.message || "Some error occurred while creating the Role."
             });
         });
+
 };
 
-// Retrieve all Admins from the database.
+// Retrieve all Roles from the database.
 exports.findAll = (req, res) => {
-    const name = req.query.name;
-    var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
+    const description = req.query.description;
+    var condition = description ? { description: { [Op.like]: `%${description}%` } } : null;
 
-    Admin.findAll({ where: condition })
+
+    Role.findAll({ where: condition })
         .then(data => {
             res.send(data);
         })
+
         .catch(err => {
             res.status(500).send({
-                message: err.message || "Some error occurred while retrieving admins."
+                message: err.message || "Some error occurred while retrieving roles."
             });
+
         });
 };
 
-// Find a single Admin with an id
+// Find a single Role with an id
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    Admin.findByPk(id)
+
+    Role.findByPk(id)
         .then(data => {
             if (data) {
                 res.send(data);
             } else {
+
                 res.status(404).send({
-                    message: `Cannot find Admin with id=${id}.`
+                    message: `Cannot find Role with id=${id}.`
                 });
+
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: err.message || "Error retrieving Admin with id=" + id
+                message: err.message || "Error retrieving Role with id=" + id
             });
         });
+
 };
 
-// Update an Admin by the id in the request
+// Update an Role by the id in the request
 exports.update = (req, res) => {
     const id = req.params.id;
 
-    Admin.update(req.body, {
-        where: { admin_id: id }
+
+    Role.update(req.body, {
+        where: { role_id: id }
     })
+
         .then(num => {
             if (num == 1) {
                 res.send({
-                    message: "Admin was updated successfully."
+                    message: "Role was updated successfully."
                 });
             } else {
+
                 res.send({
-                    message: `Cannot update Admin with id=${id}. Maybe Admin was not found or req.body is empty!`
+                    message: `Cannot update Role with id=${id}. Maybe Role was not found or req.body is empty!`
                 });
+
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: err.message || "Error updating Admin with id=" + id
+                message: err.message || "Error updating Role with id=" + id
             });
         });
+
 };
 
-// Delete an Admin with the specified id in the request
+// Delete an Role with the specified id in the request
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    Admin.destroy({
-        where: { admin_id: id }
+
+    Role.destroy({
+        where: { role_id: id }
     })
+
         .then(num => {
             if (num == 1) {
                 res.send({
-                    message: "Admin was deleted successfully!"
+                    message: "Role was deleted successfully!"
                 });
             } else {
+
                 res.send({
-                    message: `Cannot delete Admin with id=${id}. Maybe Admin was not found!`
+                    message: `Cannot delete Role with id=${id}. Maybe Role was not found!`
                 });
+
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: err.message || "Could not delete Admin with id=" + id
+                message: err.message || "Could not delete Role with id=" + id
             });
         });
+
 };
 
-// Delete all Admins from the database.
+// Delete all Roles from the database.
 exports.deleteAll = (req, res) => {
-    Admin.destroy({
+    Role.destroy({
         where: {},
         truncate: false
+
     })
         .then(nums => {
-            res.send({ message: `${nums} Admins were deleted successfully!` });
+            res.send({ message: `${nums} Roles were deleted successfully!` });
         })
+
         .catch(err => {
             res.status(500).send({
-                message: err.message || "Some error occurred while removing all admins."
+                message: err.message || "Some error occurred while removing all roles."
             });
         });
+
 };

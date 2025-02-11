@@ -5,20 +5,23 @@ const Op = db.Sequelize.Op;
 // Create and Save a new Student
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.name || !req.body.email || !req.body.phone || !req.body.graduation_date) {
+  if (!req.body.fName || !req.body.lName || !req.body.email || !req.body.phone || !req.body.semesters_from_graduation) {
     res.status(400).send({
       message: "Content can not be empty!"
     });
     return;
   }
 
+
   // Create a Student
   const student = {
-    name: req.body.name,
+    fName: req.body.fName,
+    lName: req.body.lName,
     email: req.body.email,
     phone: req.body.phone,
-    graduation_date: req.body.graduation_date,
+    semesters_from_graduation: req.body.semesters_from_graduation,
     points_awarded: req.body.points_awarded || 0
+
   };
 
   // Save Student in the database
@@ -35,8 +38,10 @@ exports.create = (req, res) => {
 
 // Retrieve all Students from the database
 exports.findAll = (req, res) => {
-  const name = req.query.name;
-  var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
+  const fName = req.query.fName;
+  const lName = req.query.lName;
+  var condition = fName ? { fName: { [Op.like]: `%${fName}%` } } : null;
+
 
   Student.findAll({ where: condition })
     .then(data => {

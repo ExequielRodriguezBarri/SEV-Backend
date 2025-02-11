@@ -155,7 +155,6 @@ exports.login = async (req, res) => {
             lName: user.lName,
             userId: user.id,
             token: session.token,
-            role: user.role,
             // refresh_token: user.refresh_token,
             // expiration_date: user.expiration_date
           };
@@ -183,7 +182,6 @@ exports.login = async (req, res) => {
       token: token,
       email: email,
       userId: user.id,
-      role: user.role,
       expirationDate: tempExpirationDate,
     };
 
@@ -198,7 +196,6 @@ exports.login = async (req, res) => {
           lName: user.lName,
           userId: user.id,
           token: token,
-          role: user.role,
           // refresh_token: user.refresh_token,
           // expiration_date: user.expiration_date
         };
