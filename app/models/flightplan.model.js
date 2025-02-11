@@ -13,6 +13,9 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             allowNull: false,
         },
+        student_id: {
+            type: Sequelize.INTEGER,
+        },
     });
     return Flightplan;
 }

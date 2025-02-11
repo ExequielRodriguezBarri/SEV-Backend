@@ -28,7 +28,15 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             allowNull: false,
             defaultValue: 0
-        }
+        },
+
+        major_id: {
+            type: Sequelize.INTEGER,
+        },
+        user_id: {
+            type: Sequelize.INTEGER,
+        },
+        
     });
 
     return Student;
