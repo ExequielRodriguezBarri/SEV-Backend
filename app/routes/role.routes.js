@@ -29,6 +29,6 @@ module.exports = app => {
 
 
     // Use the same base URL structure as events
-    app.use("/eagleflight/roles", router);
+    app.use("/flight-plan-t7/roles", router);
 
 };

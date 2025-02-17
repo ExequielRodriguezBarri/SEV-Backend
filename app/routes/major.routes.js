@@ -26,6 +26,6 @@ module.exports = (app) => {
     // Delete all Majors
     router.delete("/", major.deleteAll);
   
-    app.use("/eagleflight/majors", router);
+    app.use("/flight-plan-t7/majors", router);
   };
   

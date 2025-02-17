@@ -27,6 +27,6 @@ module.exports = (app) => {
     router.delete("/", flightplan.deleteAll);
   
 
-    app.use("/eagleflight/flightplans", router);
+    app.use("/flight-plan-t7/flightplans", router);
   };
   

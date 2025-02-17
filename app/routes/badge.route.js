@@ -27,7 +27,7 @@ module.exports = (app) => {
     router.delete("/", badge.deleteAll);
   
 
-    app.use("/eagleflight/badges", router);
+    app.use("/flight-plan-t7/badges", router);
 
   };
           

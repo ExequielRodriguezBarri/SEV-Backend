@@ -9,5 +9,5 @@ module.exports = (app) => {
     // Logout
     router.post("/logout", auth.logout);
   
-    app.use("/eagleflight", router);
+    app.use("/flight-plan-t7", router);
   };
