@@ -21,5 +21,5 @@ module.exports = app => {
     // Delete all Cliftonstrengths
     router.delete("/", cliftonstrength.deleteAll);
 
-    app.use('/eagleflight/cliftonstrengths', router);
+    app.use('/flight-plan-t7/cliftonstrengths', router);
 };

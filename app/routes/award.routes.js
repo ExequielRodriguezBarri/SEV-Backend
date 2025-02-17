@@ -20,6 +20,6 @@ module.exports = (app) => {
     // Delete all Awards
     router.delete("/", award.deleteAll);
   
-    app.use("/eagleflight/awards", router);
+    app.use("/flight-plan-t7/awards", router);
   };
   

@@ -20,5 +20,5 @@ module.exports = (app) => {
   // Delete all Events
   router.delete("/", event.deleteAll);
 
-  app.use("/eagleflight/events", router);
+  app.use("/flight-plan-t7/events", router);
 };
