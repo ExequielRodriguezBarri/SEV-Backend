@@ -29,6 +29,14 @@ app.use(express.urlencoded({ extended: true }));
 
 require("./app/routes/auth.routes.js")(app);
 require("./app/routes/user.routes.js")(app);
+require("./app/routes/flightplan.routes.js")(app);
+require("./app/routes/role.routes.js")(app);
+require("./app/routes/award.routes.js")(app);
+require("./app/routes/major.routes.js")(app);
+require("./app/routes/experience.routes.js")(app);
+require("./app/routes/event.routes.js")(app);
+require("./app/routes/student.routes.js")(app);
+require("./app/routes/flightplan.routes.js")(app);
 
 
 

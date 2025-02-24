@@ -12,6 +12,9 @@ module.exports = (app) => {
   // Retrieve a single Student with id
   router.get("/:id", student.findOne);
 
+  // Retrieve a single Student with email
+  router.get("/email/:email", student.findOneByEmail);
+
   // Update a Student with id
   router.put("/:id", student.update);
 
