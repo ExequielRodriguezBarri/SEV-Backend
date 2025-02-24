@@ -13,7 +13,6 @@ let googleUser = {};
 const google_id = process.env.CLIENT_ID;
 
 exports.login = async (req, res) => {
-  console.log(req.body);
 
   var googleToken = req.body.credential;
 
@@ -186,7 +185,6 @@ exports.login = async (req, res) => {
     };
 
     console.log("making a new session");
-    console.log(session);
 
     await Session.create(session)
       .then(() => {
