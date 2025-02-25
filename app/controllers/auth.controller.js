@@ -13,7 +13,6 @@ let googleUser = {};
 const google_id = process.env.CLIENT_ID;
 
 exports.login = async (req, res) => {
-
   var googleToken = req.body.credential;
 
   const { OAuth2Client } = require("google-auth-library");
@@ -31,6 +30,7 @@ exports.login = async (req, res) => {
   let email = googleUser.email;
   let firstName = googleUser.given_name;
   let lastName = googleUser.family_name;
+  let profilePicture = googleUser.picture; // Get the profile picture URL
 
   // if we don't have their email or name, we need to make another request
   // this is solely for testing purposes
@@ -51,6 +51,7 @@ exports.login = async (req, res) => {
     email = data.email;
     firstName = data.given_name;
     lastName = data.family_name;
+    profilePicture = data.picture; // Get the profile picture URL
   }
 
   console.log(lastName);
@@ -72,6 +73,7 @@ exports.login = async (req, res) => {
           fName: firstName,
           lName: lastName,
           email: email,
+          profilePicture: profilePicture, // Store the profile picture URL
         };
       }
     })
@@ -94,14 +96,15 @@ exports.login = async (req, res) => {
       });
   } else {
     console.log(user);
-    // doing this to ensure that the user's name is the one listed with Google
+    // doing this to ensure that the user's name and profile picture are the ones listed with Google
     user.fName = firstName;
     user.lName = lastName;
+    user.profilePicture = profilePicture; // Update the profile picture URL
     console.log(user);
     await User.update(user, { where: { id: user.id } })
       .then((num) => {
         if (num == 1) {
-          console.log("updated user's name");
+          console.log("updated user's name and profile picture");
         } else {
           console.log(
             `Cannot update User with id=${user.id}. Maybe User was not found or req.body is empty!`
@@ -154,6 +157,7 @@ exports.login = async (req, res) => {
             lName: user.lName,
             userId: user.id,
             token: session.token,
+            profilePicture: user.profilePicture, // Include the profile picture URL
             // refresh_token: user.refresh_token,
             // expiration_date: user.expiration_date
           };
@@ -194,6 +198,7 @@ exports.login = async (req, res) => {
           lName: user.lName,
           userId: user.id,
           token: token,
+          profilePicture: user.profilePicture, // Include the profile picture URL
           // refresh_token: user.refresh_token,
           // expiration_date: user.expiration_date
         };

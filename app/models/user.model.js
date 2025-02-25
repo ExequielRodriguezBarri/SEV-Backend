@@ -17,6 +17,10 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      profilePicture: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       // refresh_token: {
       //   type: Sequelize.STRING(512),
       //   allowNull: true
