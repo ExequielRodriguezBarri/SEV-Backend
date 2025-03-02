@@ -37,6 +37,9 @@ require("./app/routes/experience.routes.js")(app);
 require("./app/routes/event.routes.js")(app);
 require("./app/routes/student.routes.js")(app);
 require("./app/routes/flightplan.routes.js")(app);
+require("./app/routes/cliftonstrength.routes.js")(app);
+require("./app/routes/badge.routes.js")(app);
+require("./app/routes/task.routes.js")(app);
 
 
 
