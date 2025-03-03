@@ -38,8 +38,8 @@ require("./app/routes/event.routes.js")(app);
 require("./app/routes/student.routes.js")(app);
 require("./app/routes/flightplan.routes.js")(app);
 require("./app/routes/cliftonstrength.routes.js")(app);
-require("./app/routes/badge.routes.js")(app);
-require("./app/routes/task.routes.js")(app);
+require("./app/routes/badge.route.js")(app);
+require("./app/routes/task.route.js")(app);
 
 
 
