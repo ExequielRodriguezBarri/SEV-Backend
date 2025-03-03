@@ -83,12 +83,26 @@ exports.login = async (req, res) => {
 
   // this lets us get the user id
   if (user.id === undefined) {
-    console.log("need to get user's id");
+    console.log("Need to get user's ID");
     console.log(user);
+
     await User.create(user)
-      .then((data) => {
-        console.log("user was registered");
+      .then(async (data) => {
+        console.log("User was registered");
         user = data.dataValues;
+
+        // Find the student by email
+        const student = await db.student.findOne({
+          where: { email: user.email },
+        });
+
+        if (student) {
+          await student.update({ user_id: user.id });
+          console.log("Student table updated with user ID:", user.id);
+        } else {
+          console.log("No matching student found for email:", user.email);
+        }
+
         // res.send({ message: "User was registered successfully!" });
       })
       .catch((err) => {

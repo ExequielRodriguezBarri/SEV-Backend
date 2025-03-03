@@ -1,37 +1,42 @@
 const db = require("../models");
 const User = db.user;
+const Student = db.student; // Assuming your student model is correctly set up
 const Op = db.Sequelize.Op;
 
 // Create and Save a new User
-exports.create = (req, res) => {
-  // Validate request
-  if (!req.body.fName) {
-    res.status(400).send({
-      message: "Content can not be empty!",
+exports.create = async (req, res) => {
+  try {
+    // Validate request
+    if (!req.body.fName || !req.body.email) {
+      return res
+        .status(400)
+        .send({ message: "Required fields cannot be empty!" });
+    }
+
+    // Create the User
+    const user = await User.create({
+      id: req.body.id, // This might be auto-generated
+      fName: req.body.fName,
+      lName: req.body.lName,
+      email: req.body.email,
     });
-    return;
+
+    // Find matching student by email
+    const student = await Student.findOne({
+      where: { email: req.body.email },
+    });
+
+    // If student exists, update the student_id with the new user ID
+    if (student) {
+      await student.update({ user_id: user.id });
+    }
+
+    res.send(user);
+  } catch (error) {
+    res.status(500).send({
+      message: error.message || "Some error occurred while creating the User.",
+    });
   }
-
-  // Create a User
-  const user = {
-    id: req.body.id,
-    fName: req.body.fName,
-    lName: req.body.lName,
-    email: req.body.email,
-    // refresh_token: req.body.refresh_token,
-    // expiration_date: req.body.expiration_date
-  };
-
-  // Save User in the database
-  User.create(user)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while creating the User.",
-      });
-    });
 };
 
 // Retrieve all People from the database.
