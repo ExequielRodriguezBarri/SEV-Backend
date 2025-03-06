@@ -38,12 +38,8 @@ exports.create = (req, res) => {
 
 // Retrieve all Students from the database
 exports.findAll = (req, res) => {
-  const fName = req.query.fName;
-  const lName = req.query.lName;
-  var condition = fName ? { fName: { [Op.like]: `%${fName}%` } } : null;
 
-
-  Student.findAll({ where: condition })
+  Student.findAll()
     .then(data => {
       res.send(data);
     })

@@ -46,24 +46,29 @@ exports.findAll = (req, res) => {
 };
 
 // Find a single Event with an id
-exports.findOne = (req, res) => {
+exports.findOne = async (req, res) => {
   const id = req.params.id;
-  Event.findByPk(id)
-    .then((data) => {
-      if (data) {
-        res.send(data);
-      } else {
-        res.status(404).send({
-          message: `Cannot find Event with id=${id}.`,
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Error retrieving Event with id=" + id,
-      });
+
+  try {
+    const event = await Event.findByPk(id, {
+      include: {
+        model: db.experience,
+        through: { attributes: [] }, // Exclude the bridge table attributes
+      },
     });
+
+    if (!event) {
+      return res.status(404).send({ message: `Cannot find Event with id=${id}.` });
+    }
+
+    res.send(event);
+  } catch (error) {
+    res.status(500).send({
+      message: error.message || `Error retrieving Event with id=${id}`,
+    });
+  }
 };
+
 
 // Update a Event by the id in the request
 exports.update = (req, res) => {
