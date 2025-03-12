@@ -8,7 +8,7 @@ module.exports = (app) => {
   
 
     // Retrieve all Flightplans
-    router.get("/", flightplan.findAll);
+    router.get("/student/:id", flightplan.findAll);
   
 
     // Retrieve a single Flightplan with id
