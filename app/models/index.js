@@ -33,11 +33,29 @@ db.cliftonstrength = require("./cliftonstrength.model.js")(sequelize, Sequelize)
 db.student_strength = sequelize.define("student_strength", {}, { timestamps: false });
 db.student_badge = sequelize.define("student_badge", {}, { timestamps: false });
 db.role_user = sequelize.define("role_user", {}, { timestamps: false });
-db.flightplan_task = require("./flightplan_task.model.js")(sequelize, Sequelize);
-db.flightplan_experience = require("./flightplan_experience.model.js")(sequelize, Sequelize);
-db.experience_events = sequelize.define("experience_events", {}, { timestamps: false });
-db.experience_strength = sequelize.define("experience_strength", {}, { timestamps: false });
-db.experience_major = sequelize.define("experience_major", {}, { timestamps: false });
+db.flightplan_task = require("./flightplan_task.model.js")(
+  sequelize,
+  Sequelize
+);
+db.flightplan_experience = require("./flightplan_experience.model.js")(
+  sequelize,
+  Sequelize
+);
+db.experience_events = sequelize.define(
+  "experience_events",
+  {},
+  { timestamps: false }
+);
+db.experience_strength = sequelize.define(
+  "experience_strength",
+  {},
+  { timestamps: false }
+);
+db.experience_major = sequelize.define(
+  "experience_major",
+  {},
+  { timestamps: false }
+);
 db.task_strength = sequelize.define("task_strength", {}, { timestamps: false });
 db.task_major = sequelize.define("task_major", {}, { timestamps: false });
 db.task_preReq = require("./task_preReq.model.js")(sequelize, Sequelize);
@@ -135,14 +153,26 @@ db.major.belongsToMany(db.task, {
   foreignKey: "major_id",
 });
 
-db.flightplan_experience.belongsTo(db.flightplan, { foreignKey: "plan_id" });
-db.flightplan_experience.belongsTo(db.experience, {
+// Define Many-to-Many relationships using the bridge tables
+db.flightplan.belongsToMany(db.experience, {
+  through: db.flightplan_experience, // Use the bridge table
+  foreignKey: "plan_id",
+});
+
+db.experience.belongsToMany(db.flightplan, {
+  through: db.flightplan_experience,
   foreignKey: "experience_id",
 });
 
-// One-to-Many Relationships (use belongsTo with foreignKey)
-db.flightplan_task.belongsTo(db.flightplan, { foreignKey: "plan_id" });
-db.flightplan_task.belongsTo(db.task, { foreignKey: "task_id" });
+db.flightplan.belongsToMany(db.task, {
+  through: db.flightplan_task, // Use the bridge table
+  foreignKey: "plan_id",
+});
+
+db.task.belongsToMany(db.flightplan, {
+  through: db.flightplan_task,
+  foreignKey: "task_id",
+});
 
 // Self-referencing Many-to-Many Relationship for Task Prerequisites
 db.task.belongsToMany(db.task, {

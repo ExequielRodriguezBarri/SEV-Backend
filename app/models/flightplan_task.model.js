@@ -10,11 +10,11 @@ module.exports = (sequelize, Sequelize) => {
         },
         completion_date: {
             type: Sequelize.DATE,
-            allowNull: false
+            allowNull: true
         },
         points_awarded: {
             type: Sequelize.INTEGER,
-            allowNull: false
+            allowNull: true
         },
         approved_by:{
             type: Sequelize.INTEGER
