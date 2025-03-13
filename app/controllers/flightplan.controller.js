@@ -36,7 +36,7 @@ exports.create = (req, res) => {
 // Retrieve all Awards from the database.
 exports.findAll = (req, res) => {
   const name = req.query.name;
-  const student_id = req.body.id;
+  const student_id = req.params.id;
   var condition = {};
 
   if (req.query.semester) {
@@ -46,7 +46,7 @@ exports.findAll = (req, res) => {
   if (student_id) {
     condition.student_id = student_id;
   }
-
+  
   Flightplan.findAll({
     where: condition,
     include: [
