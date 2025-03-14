@@ -21,7 +21,9 @@ exports.create = (req, res) => {
         name: req.body.name,
         description: req.body.description,
         rationale: req.body.rationale,
-        points: req.body.points
+        points: req.body.points,
+        required_experience: req.body.required_experience,
+        semesters_from_graduation: req.body.semesters_from_graduation
     };
 
     // Save Experience in the database
