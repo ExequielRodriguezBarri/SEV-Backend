@@ -27,12 +27,10 @@ db.badge = require("./badge.model.js")(sequelize, Sequelize);
 db.major = require("./major.model.js")(sequelize, Sequelize);
 db.flightplan = require("./flightplan.model.js")(sequelize, Sequelize);
 db.task = require("./task.model.js")(sequelize, Sequelize);
-db.role = require("./role.model.js")(sequelize, Sequelize);
 db.student_award = require("./student_awards.model.js")(sequelize, Sequelize);
 db.cliftonstrength = require("./cliftonstrength.model.js")(sequelize, Sequelize);
 db.student_strength = sequelize.define("student_strength", {}, { timestamps: false });
 db.student_badge = sequelize.define("student_badge", {}, { timestamps: false });
-db.role_user = sequelize.define("role_user", {}, { timestamps: false });
 db.flightplan_task = require("./flightplan_task.model.js")(
   sequelize,
   Sequelize
@@ -59,7 +57,6 @@ db.experience_major = sequelize.define(
 db.task_strength = sequelize.define("task_strength", {}, { timestamps: false });
 db.task_major = sequelize.define("task_major", {}, { timestamps: false });
 db.task_preReq = require("./task_preReq.model.js")(sequelize, Sequelize);
-db.role_session = sequelize.define("role_session", {}, { timestamps: false });
 
 // Many-to-Many Relationships
 // Using belongsToMany with "through" for bridge tables
@@ -88,24 +85,6 @@ db.student.belongsToMany(db.badge, {
 db.badge.belongsToMany(db.student, {
   through: "student_badge",
   foreignKey: "badge_id",
-});
-
-db.user.belongsToMany(db.role, {
-  through: "role_user",
-  foreignKey: "user_id",
-});
-db.role.belongsToMany(db.user, {
-  through: "role_user",
-  foreignKey: "role_id",
-});
-
-db.session.belongsToMany(db.role, {
-  through: "role_session",
-  foreignKey: "session_id",
-});
-db.role.belongsToMany(db.session, {
-  through: "role_session",
-  foreignKey: "role_id",
 });
 
 db.event.belongsToMany(db.experience, {
