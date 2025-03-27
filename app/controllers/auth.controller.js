@@ -213,6 +213,7 @@ exports.login = async (req, res) => {
           userId: user.id,
           token: token,
           profilePicture: user.profilePicture, // Include the profile picture URL
+          role: user.role
           // refresh_token: user.refresh_token,
           // expiration_date: user.expiration_date
         };
