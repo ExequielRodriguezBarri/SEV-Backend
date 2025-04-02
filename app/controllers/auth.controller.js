@@ -86,28 +86,92 @@ exports.login = async (req, res) => {
     console.log("Need to get user's ID");
     console.log(user);
 
-    await User.create(user)
-      .then(async (data) => {
-        console.log("User was registered");
-        user = data.dataValues;
+    try {
+      const data = await User.create(user);
+      console.log("User was registered");
+      user = data.dataValues;
 
-        // Find the student by email
-        const student = await db.student.findOne({
-          where: { email: user.email },
+      // Find the student by email
+      const student = await db.student.findOne({
+        where: { email: user.email },
+      });
+
+      // After updating the student with user_id
+      if (student) {
+        await student.update({ user_id: user.id });
+        console.log("Student table updated with user ID:", user.id);
+
+        // Create a flightplan for the student
+        const flightplan = await db.flightplan.create({
+          semester: "Fall25",
+          semesters_from_graduation: student.semesters_from_graduation,
+          student_id: student.id,
         });
 
-        if (student) {
-          await student.update({ user_id: user.id });
-          console.log("Student table updated with user ID:", user.id);
-        } else {
-          console.log("No matching student found for email:", user.email);
+        console.log("Created flightplan:", flightplan.id);
+
+        // Find all tasks that match the semester_from_graduation
+        const matchingTasks = await db.task.findAll({
+          where: {
+            semesters_from_graduation: student.semesters_from_graduation,
+          },
+        });
+
+        console.log(`Found ${matchingTasks.length} matching tasks`);
+
+        // Create entries in the task bridge table
+        const taskBridgeEntries = matchingTasks.map((task) => ({
+          plan_id: flightplan.id,
+          task_id: task.id,
+          completion_date: null,
+          points_awarded: null,
+          approved_by: null,
+        }));
+
+        if (taskBridgeEntries.length > 0) {
+          await db.flightplan_task.bulkCreate(taskBridgeEntries);
+          console.log(
+            `Added ${taskBridgeEntries.length} tasks to the student's flightplan`
+          );
         }
 
-        // res.send({ message: "User was registered successfully!" });
-      })
-      .catch((err) => {
-        res.status(500).send({ message: err.message });
-      });
+        // Find all experiences that match the semester_from_graduation
+        const matchingExperiences = await db.experience.findAll({
+          where: {
+            semesters_from_graduation: student.semesters_from_graduation,
+          },
+        });
+
+        console.log(`Found ${matchingExperiences.length} matching experiences`);
+
+        // Create entries in the experience bridge table
+        const experienceBridgeEntries = matchingExperiences.map(
+          (experience) => ({
+            plan_id: flightplan.id,
+            experience_id: experience.id,
+            completion_date: null,
+            points_awarded: null,
+            approved_by: null,
+            event_id: null,
+          })
+        );
+
+        if (experienceBridgeEntries.length > 0) {
+          await db.flightplan_experience.bulkCreate(experienceBridgeEntries);
+          console.log(
+            `Added ${experienceBridgeEntries.length} experiences to the student's flightplan`
+          );
+        }
+      } else {
+        console.log("No matching student found for email:", user.email);
+      }
+
+      // Only send response here when everything is successful
+      // res.send({ message: "User was registered successfully!" });
+    } catch (err) {
+      // Only send error response if no response has been sent yet
+      res.status(500).send({ message: err.message });
+    }
   } else {
     console.log(user);
     // doing this to ensure that the user's name and profile picture are the ones listed with Google
@@ -172,6 +236,7 @@ exports.login = async (req, res) => {
             userId: user.id,
             token: session.token,
             profilePicture: user.profilePicture, // Include the profile picture URL
+            role: user.role,
             // refresh_token: user.refresh_token,
             // expiration_date: user.expiration_date
           };
@@ -213,7 +278,7 @@ exports.login = async (req, res) => {
           userId: user.id,
           token: token,
           profilePicture: user.profilePicture, // Include the profile picture URL
-          role: user.role
+          role: user.role,
           // refresh_token: user.refresh_token,
           // expiration_date: user.expiration_date
         };
