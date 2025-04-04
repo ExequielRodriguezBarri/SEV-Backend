@@ -9,6 +9,10 @@ module.exports = (app) => {
   // Retrieve all Experiences
   router.get("/", experience.findAll);
 
+  // update completion
+  router.put("/updateCompletion/", experience.updateCompletion);
+
+
   // Retrieve a single Experience with id
   router.get("/:id", experience.findOne);
 
