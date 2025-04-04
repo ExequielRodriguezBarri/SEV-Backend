@@ -9,6 +9,8 @@ module.exports = (app) => {
 
     // Retrieve all Tasks
     router.get("/", task.findAll);
+
+    router.put("/updateCompletion/", task.updateTaskCompletion);
   
 
     // Retrieve a single Task with id
