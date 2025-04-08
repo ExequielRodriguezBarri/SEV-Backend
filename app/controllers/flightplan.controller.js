@@ -159,13 +159,16 @@ exports.deleteAll = (req, res) => {
 
 exports.updateTaskCompletionDate = async (req, res) => {
   const { flightplanId, taskId } = req.params;
-  const { completion_date } = req.body;
+  const { completion_date, awarded_points } = req.body;
 
-  console.log("Received parameters:", { flightplanId, taskId, completion_date });
+  console.log("Received parameters:", { flightplanId, taskId, completion_date, awarded_points });
 
   try {
     const result = await db.flightplan_task.update(
-      { completion_date: completion_date || new Date() }, // Default to current date if no date provided
+      { 
+        completion_date: completion_date || new Date(), // Default to current date if no date provided
+        points_awarded: awarded_points // Update points_awarded field
+      },
       {
         where: {
           plan_id: flightplanId,
@@ -178,29 +181,31 @@ exports.updateTaskCompletionDate = async (req, res) => {
 
     // Check if the update was successful
     if (result[0] === 1) {
-      res.send({ message: "Task completion date updated successfully." });
+      res.send({ message: "Task completion date and points updated successfully." });
     } else {
       res.status(404).send({
         message: `No matching record found for plan_id=${flightplanId} and task_id=${taskId}.`,
       });
     }
   } catch (err) {
-    console.error("Error updating task completion date:", err);
+    console.error("Error updating task completion date and points:", err);
     res.status(500).send({
-      message: "An error occurred while updating the task completion date.",
+      message: "An error occurred while updating the task completion date and points.",
     });
   }
 };
 
 exports.updateExperienceCompletionDate = async (req, res) => {
   const { flightplanId, experienceId } = req.params;
-  const { completion_date } = req.body;
+  const { completion_date, awarded_points } = req.body;
 
-  console.log("Received parameters:", { flightplanId, experienceId, completion_date });
+  console.log("Received parameters:", { flightplanId, experienceId, completion_date, awarded_points });
 
   try {
     const result = await db.flightplan_experience.update(
-      { completion_date: completion_date || new Date() }, // Default to current date if no date provided
+      { completion_date: completion_date || new Date(),
+        points_awarded: awarded_points // Update points_awarded field
+      }, 
       {
         where: {
           plan_id: flightplanId,
@@ -213,16 +218,16 @@ exports.updateExperienceCompletionDate = async (req, res) => {
 
     // Check if the update was successful
     if (result[0] === 1) {
-      res.send({ message: "Experience completion date updated successfully." });
+      res.send({ message: "Experience completion date and points updated successfully." });
     } else {
       res.status(404).send({
         message: `No matching record found for plan_id=${flightplanId} and experience_id=${experienceId}.`,
       });
     }
   } catch (err) {
-    console.error("Error updating experience completion date:", err);
+    console.error("Error updating experience completion date and points:", err);
     res.status(500).send({
-      message: "An error occurred while updating the experience completion date.",
+      message: "An error occurred while updating the experience completion date and points.",
     });
   }
 };
