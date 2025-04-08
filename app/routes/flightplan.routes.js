@@ -25,7 +25,12 @@ module.exports = (app) => {
 
     // Delete all Flightplans
     router.delete("/", flightplan.deleteAll);
-  
+
+    // Update task completion date in the bridge table (flightplan_task)
+    router.put("/:flightplanId/tasks/:taskId", flightplan.updateTaskCompletionDate);
+
+    // Update experience completion date in the bridge table (flightplan_experience)
+    router.put("/:flightplanId/experiences/:experienceId", flightplan.updateExperienceCompletionDate);
 
     app.use("/flight-plan-t7/flightplans", router);
   };

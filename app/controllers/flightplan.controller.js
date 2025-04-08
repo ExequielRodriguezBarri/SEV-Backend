@@ -52,11 +52,11 @@ exports.findAll = (req, res) => {
     include: [
       {
         model: db.experience,
-        through: { attributes: [] }, // Exclude bridge table attributes
+        through: { attributes: ["completion_date"] }, // Exclude bridge table attributes
       },
       {
         model: db.task,
-        through: { attributes: [] }, // Exclude bridge table attributes
+        through: { attributes: ["completion_date"] }, // Exclude bridge table attributes
       },
     ],
   })
@@ -87,7 +87,7 @@ exports.findOne = (req, res) => {
     });
 };
 
-// Update a Award by the id in the request
+// Update a Flight Plan by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
 
@@ -113,7 +113,7 @@ exports.update = (req, res) => {
     });
 };
 
-// Delete a Award with the specified id in the request
+// Delete a Flight Plan with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
@@ -155,4 +155,74 @@ exports.deleteAll = (req, res) => {
           err.message || "Some error occurred while removing all Flightplans.",
       });
     });
+};
+
+exports.updateTaskCompletionDate = async (req, res) => {
+  const { flightplanId, taskId } = req.params;
+  const { completion_date } = req.body;
+
+  console.log("Received parameters:", { flightplanId, taskId, completion_date });
+
+  try {
+    const result = await db.flightplan_task.update(
+      { completion_date: completion_date || new Date() }, // Default to current date if no date provided
+      {
+        where: {
+          plan_id: flightplanId,
+          task_id: taskId,      
+        },
+      }
+    );
+
+    console.log("Update result:", result);
+
+    // Check if the update was successful
+    if (result[0] === 1) {
+      res.send({ message: "Task completion date updated successfully." });
+    } else {
+      res.status(404).send({
+        message: `No matching record found for plan_id=${flightplanId} and task_id=${taskId}.`,
+      });
+    }
+  } catch (err) {
+    console.error("Error updating task completion date:", err);
+    res.status(500).send({
+      message: "An error occurred while updating the task completion date.",
+    });
+  }
+};
+
+exports.updateExperienceCompletionDate = async (req, res) => {
+  const { flightplanId, experienceId } = req.params;
+  const { completion_date } = req.body;
+
+  console.log("Received parameters:", { flightplanId, experienceId, completion_date });
+
+  try {
+    const result = await db.flightplan_experience.update(
+      { completion_date: completion_date || new Date() }, // Default to current date if no date provided
+      {
+        where: {
+          plan_id: flightplanId,
+          experience_id: experienceId,
+        },
+      }
+    );
+
+    console.log("Update result:", result);
+
+    // Check if the update was successful
+    if (result[0] === 1) {
+      res.send({ message: "Experience completion date updated successfully." });
+    } else {
+      res.status(404).send({
+        message: `No matching record found for plan_id=${flightplanId} and experience_id=${experienceId}.`,
+      });
+    }
+  } catch (err) {
+    console.error("Error updating experience completion date:", err);
+    res.status(500).send({
+      message: "An error occurred while updating the experience completion date.",
+    });
+  }
 };
