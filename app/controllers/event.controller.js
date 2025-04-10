@@ -3,31 +3,39 @@ const Event = db.event;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Event
-exports.create = (req, res) => {
-  // Create an Event
+exports.create = async (req, res) => {
+  const { name, description, event_type, date, start_time, end_time, location, attendance_type, registration, completion_type, experienceIds } = req.body;
+
+  // Define the event data
   const event = {
-    name: req.body.name,
-    description: req.body.description,
-    event_type: req.body.event_type,
-    date: req.body.date,
-    start_time: req.body.start_time,
-    end_time: req.body.end_time,
-    location: req.body.location,
-    attendance_type: req.body.attendance_type,
-    registration: req.body.registration,
-    completion_type: req.body.completion_type,
+    name,
+    description,
+    event_type,
+    date,
+    start_time,
+    end_time,
+    location,
+    attendance_type,
+    registration,
+    completion_type,
   };
-  // Save Event in the database
-  Event.create(event)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Event.",
-      });
+
+  try {
+    // Create the event in the database
+    const createdEvent = await Event.create(event);
+
+    // If experienceIds are provided, link them to the created event
+    if (experienceIds && experienceIds.length > 0) {
+      await createdEvent.addExperiences(experienceIds); 
+    }
+
+    // Return the created event as a response
+    res.status(201).send(createdEvent);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Some error occurred while creating the Event.",
     });
+  }
 };
 
 // Retrieve all Events from the database.
