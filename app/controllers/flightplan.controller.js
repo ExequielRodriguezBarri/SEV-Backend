@@ -1,3 +1,4 @@
+const e = require("express");
 const db = require("../models");
 const Flightplan = db.flightplan;
 const Student = db.student;
@@ -53,11 +54,11 @@ exports.findAll = (req, res) => {
     include: [
       {
         model: db.experience,
-        through: { attributes: ["completion_date"] }, // Exclude bridge table attributes
+        through: { attributes: ["completion_date", "approved_by"] }, // Exclude bridge table attributes
       },
       {
         model: db.task,
-        through: { attributes: ["completion_date"] }, // Exclude bridge table attributes
+        through: { attributes: ["completion_date", "approved_by"] }, // Exclude bridge table attributes
       },
     ],
   })
@@ -186,31 +187,14 @@ exports.updateTaskCompletionDate = async (req, res) => {
     console.log("Update result:", result);
 
     // Check if the update was successful
-    if (result[0] === 1) {
-      // Get the current student record
-      const student = await Student.findByPk(studentId);
-
-      if (!student) {
-        return res.status(404).send({
-          message: `Student with id=${studentId} not found.`,
-        });
-      }
-
-      // Calculate the new points total
-      const currentPoints = student.points_awarded || 0;
-      const newPointsTotal = currentPoints + awarded_points;
-
-      // Update the student record with the new points total
-      await Student.update(
-        { points_awarded: newPointsTotal },
-        { where: { id: studentId } }
-      );
-      res.send({
-        message: "Task completion date and points updated successfully.",
-      });
-    } else {
+    if (result[0] != 1) {
       res.status(404).send({
         message: `No matching record found for plan_id=${flightplanId} and task_id=${taskId}.`,
+      });
+    }
+    else {
+      res.send({
+        message: `Task completion date and points updated successfully for plan_id=${flightplanId} and task_id=${taskId}.`,
       });
     }
   } catch (err) {
@@ -251,24 +235,6 @@ exports.updateExperienceCompletionDate = async (req, res) => {
 
     // Check if the update was successful
     if (result[0] === 1) {
-      // Get the current student record
-      const student = await Student.findByPk(studentId);
-
-      if (!student) {
-        return res.status(404).send({
-          message: `Student with id=${studentId} not found.`,
-        });
-      }
-
-      // Calculate the new points total
-      const currentPoints = student.points_awarded || 0;
-      const newPointsTotal = currentPoints + awarded_points;
-
-      // Update the student record with the new points total
-      await Student.update(
-        { points_awarded: newPointsTotal },
-        { where: { id: studentId } }
-      );
       res.send({
         message: "Experience completion date and points updated successfully.",
       });
