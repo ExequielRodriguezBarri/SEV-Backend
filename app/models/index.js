@@ -152,6 +152,18 @@ db.task.belongsToMany(db.flightplan, {
   through: db.flightplan_task,
   foreignKey: "task_id",
 });
+db.flightplan_task.belongsTo(db.task, { foreignKey: 'task_id' });
+db.flightplan_task.belongsTo(db.flightplan, { foreignKey: 'plan_id' });
+
+db.task.hasMany(db.flightplan_task, { foreignKey: 'task_id' });
+db.flightplan.hasMany(db.flightplan_task, { foreignKey: 'plan_id' });
+
+db.flightplan_experience.belongsTo(db.experience, { foreignKey: 'experience_id' });
+db.flightplan_experience.belongsTo(db.flightplan, { foreignKey: 'plan_id' });
+
+db.experience.hasMany(db.flightplan_experience, { foreignKey: 'experience_id' });
+db.flightplan.hasMany(db.flightplan_experience, { foreignKey: 'plan_id' });
+
 
 // Self-referencing Many-to-Many Relationship for Task Prerequisites
 db.task.belongsToMany(db.task, {
