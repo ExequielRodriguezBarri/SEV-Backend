@@ -4,18 +4,6 @@ const Op = db.Sequelize.Op;
 
 // Create and Save a new Experience
 exports.create = (req, res) => {
-  // Validate request
-  if (
-    !req.body.category ||
-    !req.body.required_experience ||
-    !req.body.semesters_from_graduation
-  ) {
-    res.status(400).send({
-      message: "Content can not be empty!",
-    });
-    return;
-  }
-
   // Create an Experience
   const experience = {
     category: req.body.category,
