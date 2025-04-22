@@ -20,5 +20,9 @@ module.exports = (app) => {
   // Delete all Events
   router.delete("/", event.deleteAll);
 
+  // Get experiences linked to an event
+  router.get("/:id/experiences", event.getEventExperiences);
+
+
   app.use("/flight-plan-t7/events", router);
 };
