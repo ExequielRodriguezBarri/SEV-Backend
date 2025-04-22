@@ -158,3 +158,29 @@ exports.deleteAll = (req, res) => {
     });
 };
 
+// Get badges for a student
+exports.findBadges = (req, res) => {
+  const id = req.params.id;
+  
+  Student.findByPk(id, {
+    include: [{
+      model: db.badge,
+      through: { attributes: [] } // Excludes the join table fields
+    }]
+  })
+  .then(data => {
+    if (data) {
+      res.send(data.badges);
+    } else {
+      res.status(404).send({
+        message: `Cannot find Student with id=${id}.`
+      });
+    }
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Error retrieving badges for Student with id=" + id
+    });
+  });
+};
+
