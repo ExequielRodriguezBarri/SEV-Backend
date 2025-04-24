@@ -40,6 +40,8 @@ require("./app/routes/flightplan.routes.js")(app);
 require("./app/routes/cliftonstrength.routes.js")(app);
 require("./app/routes/badge.route.js")(app);
 require("./app/routes/task.route.js")(app);
+require("./app/routes/checkin.routes.js")(app);
+
 
 
 
