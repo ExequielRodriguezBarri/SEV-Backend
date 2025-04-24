@@ -251,3 +251,136 @@ exports.updateExperienceCompletionDate = async (req, res) => {
     });
   }
 };
+
+exports.uploadTaskReflection = async (req, res) => {
+  const { flightplanId, taskId } = req.params;
+  const { reflection_text } = req.body;
+
+  try {
+    const result = await db.flightplan_task.update(
+      { reflection_text },
+      {
+        where: {
+          plan_id: flightplanId,
+          task_id: taskId,
+        },
+      }
+    );
+
+    if (result[0] === 1) {
+      res.json({ message: "Reflection updated successfully." });
+        } else {
+      res.status(404).send({
+        message: `No matching record found for plan_id=${flightplanId} and task_id=${taskId}.`,
+      });
+    }
+  } catch (err) {
+    res.status(500).send({
+      message: "Error updating reflection.",
+      error: err.message,
+    });
+  }
+};
+
+exports.uploadTaskFile = async (req, res) => {
+  const { flightplanId, taskId } = req.params;
+
+  console.log("Incoming file upload...");
+  console.log("req.file:", req.file);
+
+  console.log('Method:', req.method); // must say POST
+  console.log('Headers:', req.headers); // must contain multipart/form-data
+  console.log('req.file:', req.file);  // should show file buffer
+  console.log('req.body:', req.body);
+
+  // Step 1: Check if a file was uploaded
+  if (!req.file || !req.file.buffer) {
+    console.log("Missing file or buffer");
+    return res.status(400).send({ message: "No file uploaded." });
+  }
+
+  const fileBuffer   = req.file.buffer;
+  const mimeType     = req.file.mimetype;
+
+  try {
+    const [updatedCount] = await db.flightplan_task.update(
+      {
+        file: fileBuffer,
+        fileMimeType: mimeType 
+      },
+      {
+        where: {
+          plan_id: flightplanId,
+          task_id: taskId
+        }
+      }
+    );
+
+    if (updatedCount === 1) {
+      res.json({ message: "File uploaded successfully." }); 
+    } else {
+      res.status(404).send({
+        message: `Task not found for plan_id=${flightplanId}, task_id=${taskId}.`
+      });
+    }
+  } catch (err) {
+    res.status(500).send({
+      message: "Failed to save file to database.",
+      error: err.message
+    });
+  }
+};
+
+exports.getTaskFile = async (req, res) => {
+  const { flightplanId, taskId } = req.params;
+
+  try {
+    const task = await db.flightplan_task.findOne({
+      where: {
+        plan_id: flightplanId,
+        task_id: taskId
+      },
+      attributes: ['file', 'fileMimeType']
+    });
+
+    if (!task || !task.file) {
+      return res.status(404).send({ message: "No file found for this task." });
+    }
+
+    res.setHeader("Content-Type", task.fileMimeType || "application/octet-stream");
+    res.setHeader("Content-Disposition", "inline; filename=\"proof\""); // show in iframe
+    res.send(task.file);
+  } catch (err) {
+    res.status(500).send({
+      message: "Could not retrieve file.",
+      error: err.message
+    });
+  }
+};
+
+exports.getTaskInfo = async (req, res) => {
+  const { flightplanId, taskId } = req.params;
+
+  try {
+    const task = await db.flightplan_task.findOne({
+      where: {
+        plan_id: flightplanId,
+        task_id: taskId
+      },
+      attributes: ['reflection_text', 'fileMimeType']
+    });
+
+    if (!task) {
+      return res.status(404).send({ message: "Task not found." });
+    }
+
+    res.json(task);
+  } catch (err) {
+    res.status(500).send({
+      message: "Error retrieving task info.",
+      error: err.message
+    });
+  }
+};
+
+
