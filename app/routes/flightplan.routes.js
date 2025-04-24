@@ -1,6 +1,11 @@
 module.exports = (app) => {
     const flightplan = require("../controllers/flightplan.controller.js");
     var router = require("express").Router();
+    const multer = require("multer");
+    const upload = multer({
+      storage: multer.memoryStorage(),
+      limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB limit
+    });
   
 
     // Create a new Flightplan
@@ -31,6 +36,14 @@ module.exports = (app) => {
 
     // Update experience completion date in the bridge table (flightplan_experience)
     router.put("/:flightplanId/experiences/:experienceId", flightplan.updateExperienceCompletionDate);
+
+    router.put("/:flightplanId/tasks/:taskId/reflection", flightplan.uploadTaskReflection);
+
+    router.post("/:flightplanId/tasks/:taskId/file", upload.single("file"), flightplan.uploadTaskFile);
+
+    router.get("/:flightplanId/tasks/:taskId/file", flightplan.getTaskFile);
+
+    router.get('/:flightplanId/tasks/:taskId/info', flightplan.getTaskInfo);
 
     app.use("/flight-plan-t7/flightplans", router);
   };

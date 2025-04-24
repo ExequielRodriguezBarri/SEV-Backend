@@ -18,7 +18,19 @@ module.exports = (sequelize, Sequelize) => {
         },
         approved_by:{
             type: Sequelize.INTEGER
-        }
+        },
+        file: {
+            type: Sequelize.BLOB('long'),
+            allowNull: true,
+        },
+        reflection_text: {
+            type: Sequelize.TEXT,
+            allowNull: true,
+        },
+        fileMimeType: {   
+            type: Sequelize.STRING,
+            allowNull: true
+        },
     }, {
         timestamps: false
     });
